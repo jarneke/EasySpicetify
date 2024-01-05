@@ -1,6 +1,3 @@
-# Ok so allot of chat-GPT has been used as i had basically no Python knowledge
-
-
 # Place your spicetify root folder in between the "" down below
 # (example: "C:\Users\Jhon\spicetify-themes")
 # ----------------
@@ -95,23 +92,30 @@ def get_theme_folders(root_folder):
 def get_current_theme():
     command = "spicetify config current_theme"
     result = subprocess.run(command, capture_output=True, text=True, shell=True)
-    current_theme = result.stdout
+    current_theme = result.stdout.strip()
 
     return current_theme
 
 
+# Function to apply the theme and color scheme
+def apply_theme(theme_name, color_scheme):
+    command = f"spicetify config current_theme {theme_name} color_scheme {color_scheme} && spicetify apply"
+    subprocess.run(command, shell=True)
+
+
 def get_schemes(root_folder):
-    scheme_names = []
+    theme = get_current_theme()
+    color_file_path = os.path.join(root_folder, theme, "color.ini")
+    if not os.path.exists(color_file_path):
+        print(f"No color.ini found for theme {theme}")
+        return {}
 
     color_file = cp.ConfigParser()
-    color_file.read(rf"{root_folder}\{get_current_theme()}\color")
+    color_file.read(color_file_path)
 
     scheme_dict = {}
     for section in color_file.sections():
-        scheme_dict[section] = {}
-        for key in color_file[section]:
-            scheme_dict[section][key] = color_file[section][key]
-    print(scheme_dict)
+        scheme_dict[section] = dict(color_file[section])
 
     return scheme_dict
 
@@ -314,6 +318,8 @@ class SchemeWindow(tk.Toplevel):
     def __init__(self, master=None):
         super().__init__(master)
 
+        theme = get_current_theme()
+        scheme_dict = get_schemes(root_folder)
         # gui code
         self.geometry("400x200")
         self.configure(bg="black")
@@ -323,11 +329,23 @@ class SchemeWindow(tk.Toplevel):
         style = ttk.Style()
         style.configure("TButton", background="black")
 
+        # Create a variable to hold the selected color scheme
+        selected_scheme = tk.StringVar(self)
+
+        # Check if scheme_dict is empty and set a default value accordingly
+        if scheme_dict:
+            selected_scheme.set(next(iter(scheme_dict)))
+        else:
+            selected_scheme.set("DefaultScheme")  # Adjust this default value as needed
+
+        # Create a dropdown menu (OptionMenu) for the color schemes
+        ttk.OptionMenu(self, selected_scheme, *scheme_dict.keys()).pack()
+
+        # Create a button that will apply the selected color scheme when clicked
         ttk.Button(
             self,
-            text="get theme",
-            command=get_current_theme(),
-            style="TButton",
+            text="Apply",
+            command=lambda: apply_theme(theme, selected_scheme.get()),
         ).pack()
 
     def go_back(self):
