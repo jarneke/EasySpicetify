@@ -142,7 +142,6 @@ class MainWindow(tk.Tk):
         self.geometry("300x200")
         self.configure(bg="black")
         self.title("Main Window")
-        self.iconbitmap("assets/icons/candle_icon_257233.ico")
 
         style = ttk.Style()
         style.configure("TButton", background="black")
@@ -186,7 +185,6 @@ class ColorWindow(tk.Toplevel):
         super().__init__(master)
         self.configure(bg="black")
         self.title("Color Window")
-        self.iconbitmap("assets/icons/candle_icon_257233.ico")
 
         style = ttk.Style()
         style.configure("TButton", background="black")
@@ -251,7 +249,6 @@ class ConfigWindow(tk.Toplevel):
         self.geometry("400x350")
         self.configure(bg="black")
         self.title("config Window")
-        self.iconbitmap("assets/icons/candle_icon_257233.ico")
 
         style = ttk.Style()
         style.configure("TButton", background="black")
@@ -324,7 +321,6 @@ class SchemeWindow(tk.Toplevel):
         self.geometry("400x200")
         self.configure(bg="black")
         self.title("color scheme Window")
-        self.iconbitmap("assets/icons/candle_icon_257233.ico")
 
         style = ttk.Style()
         style.configure("TButton", background="black")
@@ -360,7 +356,6 @@ class ThemeWindow(tk.Toplevel):
         # gui code
         self.configure(bg="black")
         self.title("cuurent theme Window")
-        self.iconbitmap("assets/icons/candle_icon_257233.ico")
 
         style = ttk.Style()
         style.configure("TButton", background="black")
